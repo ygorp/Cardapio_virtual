@@ -12,6 +12,7 @@ const addressWarning = document.getElementById('address-warn');
 let cart = [];
 
 cartBtn.addEventListener('click', () => {
+    updateCartModal();
     cartModal.style.display = 'flex';
 });
 
@@ -42,7 +43,33 @@ function addToCart(name, price) {
 
     if (existingItem) {
         existingItem.quantity+= 1;
+    } else {
+        cart.push({name, price, quantity: 1});
     }
 
-    cart.push({name, price, quantity: 1});
+    updateCartModal();
+}
+
+function updateCartModal() {
+    cartItemsContainer.innerHTML = '';
+    let total = 0;
+
+    cart.forEach((item) => {
+        const itemElement = document.createElement('div');
+        itemElement.innerHTML = `
+            <div>
+                <div>
+                    <span>${item.name}</span>
+                    <span>x${item.quantity}</span>
+                    <span>${item.price}</span>
+                </div>
+
+                <div>
+                    <button onclick="removeItem('${item.name}')">Remove</button>
+                </div>
+            </div>
+        `;
+
+        cartItemsContainer.appendChild(itemElement);
+    });
 }
