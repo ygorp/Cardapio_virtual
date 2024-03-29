@@ -56,20 +56,47 @@ function updateCartModal() {
 
     cart.forEach((item) => {
         const itemElement = document.createElement('div');
+        itemElement.classList.add('flex', 'justify-between', 'mb-4', 'flex-col');
         itemElement.innerHTML = `
-            <div>
-                <div>
-                    <span>${item.name}</span>
-                    <span>x${item.quantity}</span>
-                    <span>${item.price}</span>
+            <div class="flex items-center justify-between">
+                <div class="flex flex-col">
+                    <span class="font-medium">${item.name}</span>
+                    <span>Qtd: ${item.quantity}</span>
+                    <span class="font-medium mt-2">${item.price.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})}</span>
                 </div>
 
-                <div>
-                    <button onclick="removeItem('${item.name}')">Remove</button>
-                </div>
+                <button class="remove-from-cart-btn" data-name="${item.name}">Remover</button>
             </div>
         `;
 
+        total += item.price * item.quantity;
         cartItemsContainer.appendChild(itemElement);
     });
+
+    cartTotal.innerText = total.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+
+    cartCounter.innerText = cart.length;
+}
+
+cartItemsContainer.addEventListener('click', (e) => {
+
+    if (e.target.classList.contains('remove-from-cart-btn')) {
+        const name = e.target.getAttribute('data-name');
+        removeFromCart(name);
+    }
+
+});
+
+function removeFromCart(name) {
+    const index = cart.findIndex((item) => item.name === name);
+
+    if (index !== -1) {
+        cart[index].quantity -= 1;
+
+        if (cart[index].quantity === 0) {
+            cart.splice(index, 1);
+        }
+
+        updateCartModal();
+    }
 }
