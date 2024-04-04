@@ -7,7 +7,7 @@ const checkoutBtn = document.getElementById('checkout-btn');
 const closeModalBtn = document.getElementById('close-modal-btn');
 const cartCounter = document.getElementById('cart-count');
 const addressInput = document.getElementById('address');
-const addressWarning = document.getElementById('address-warn');
+const addressWarn = document.getElementById('address-warn');
 
 let cart = [];
 
@@ -99,4 +99,51 @@ function removeFromCart(name) {
 
         updateCartModal();
     }
+}
+
+addressInput.addEventListener('input', (e) => {
+    let inputValue = e.target.value;
+
+    if (inputValue !== '') {
+        addressWarn.classList.add('hidden');
+        addressInput.classList.remove('border-red-500');
+    }
+
+});
+
+checkoutBtn.addEventListener('click', () => {
+
+    const isOpen = checkRestauranteOpen();
+    if(!isOpen) {
+        alert('Desculpe, o restaurante está fechado no momento.');
+        return;
+    }
+
+    if (cart.length === 0) return;
+
+    if (addressInput.value === '') {
+        addressWarn.classList.remove('hidden');
+        addressInput.classList.add('border-red-500');
+        return;
+    }
+
+    
+});
+
+function checkRestauranteOpen() {
+    const data = new Date();
+    const hora = data.getHours();
+    return hora >= 18 && hora <= 22;
+}
+
+const spanItem = document.getElementById('date-span');
+
+const isOpen = checkRestauranteOpen();
+
+if (isOpen) {
+   spanItem.classList.remove('bg-red-500');
+   spanItem.classList.add('bg-green-600');
+} else {
+    spanItem.classList.remove('bg-green-600');
+    spanItem.classList.add('bg-red-500');
 }
